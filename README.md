@@ -32,6 +32,7 @@
 - [设计决策](#设计决策)
 - [FAQ](#faq)
 - [许可](#许可)
+- [数据归属](#数据归属)
 
 ---
 
@@ -310,13 +311,23 @@ npm run build:land # 重新生成陆地数据
 
 ## 许可
 
-代码 [MIT](LICENSE) ©Xiwangsou
+代码 [MIT](LICENSE) © Xiwangsou
 
-数据版权归各来源所有，页面内已标注归属：
+**代码与数据是两套许可** —— 运行时展示的数据来自第三方公开接口，
+版权归各自所有者所有，完整归属要求见 [DATA_LICENSES.md](DATA_LICENSES.md)。
 
-- Natural Earth — 公有领域
-- USGS — 美国政府公有领域
-- Open-Meteo — CC BY 4.0，需保留署名
-- wheretheiss.at — 公开接口
+摘要：
 
-本项目仅为这些公开数据的可视化呈现，不对数据准确性作任何担保。
+- Natural Earth、USGS — 公有领域
+- Open-Meteo — CC BY 4.0，**必须保留署名与链接**
+- ISS 位置 — wheretheiss.at 公开接口
+
+本项目仅为这些公开数据的可视化呈现，不对数据准确性、
+完整性或及时性作任何担保。
+
+## 数据归属
+
+完整的数据归属、许可要求与免责声明见 [DATA_LICENSES.md](DATA_LICENSES.md)。
+
+如果你 fork 本项目并对外提供服务，请自行确认所用数据源的服务条款
+是否允许你的具体使用方式（尤其是否允许商业用途）。

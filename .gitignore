@@ -1,0 +1,10 @@
+node_modules/
+.DS_Store
+*.log
+.env
+.env.local
+
+# 上游原始数据（136KB）。由 scripts/build-land.mjs 下载并压缩为 data/land.js（85KB），
+# 提交压缩后的产物即可，原始文件不入库。
+# 需要重建时：https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_land.geojson
+data/land110.json

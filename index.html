@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>地球脉冲 Earth Pulse</title>
+  <meta name="description" content="实时全球地震、空间站轨道与本地气象观测台。零密钥、零服务端，纯浏览器直连公开数据。">
+  <link rel="stylesheet" href="./src/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='13' fill='none' stroke='%2338bdf8' stroke-width='2'/><circle cx='16' cy='16' r='4' fill='%23f87171'/></svg>">
+</head>
+<body>
+
+  <main class="stage">
+    <canvas id="globe" aria-label="地球可视化视图"></canvas>
+
+    <div id="boot-hint" class="boot-hint">
+      <div class="boot-ring"></div>
+      <p>正在连接公开数据源…</p>
+      <small>无需密钥 · 浏览器直连</small>
+    </div>
+
+    <div class="toolbar" role="toolbar" aria-label="视图控制">
+      <div class="tool-group">
+        <button type="button" data-mode="orthographic" class="on">球面</button>
+        <button type="button" data-mode="equirectangular">平面</button>
+      </div>
+      <div class="tool-sep"></div>
+      <div class="tool-group">
+        <button type="button" data-feed="hour">1 小时</button>
+        <button type="button" data-feed="day">1 天</button>
+        <button type="button" data-feed="week" class="on">1 周</button>
+      </div>
+      <div class="tool-sep"></div>
+      <div class="tool-group">
+        <button type="button" id="t-grid" class="on" title="经纬网格 (G)">网格</button>
+        <button type="button" id="t-night" class="on" title="晨昏线 (N)">夜面</button>
+        <button type="button" id="t-trail" class="on" title="空间站轨迹">轨迹</button>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-row">
+        <span class="legend-bar"></span>
+        <span>M2.5</span>
+        <span class="legend-bar mid"></span>
+        <span>M5</span>
+        <span class="legend-bar high"></span>
+        <span>M7+</span>
+      </div>
+      <div class="legend-note">波纹 = 事件发生后 1 小时内的扩散</div>
+    </div>
+
+    <div class="hint-bar">
+      拖动旋转 · 滚轮缩放 · 空格暂停自转 · <kbd>M</kbd> 切换投影 · <kbd>L</kbd> 回到实时 · <kbd>I</kbd> 侧栏
+    </div>
+  </main>
+
+  <aside id="side" class="side is-open">
+    <header class="side-head">
+      <h1>地球脉冲</h1>
+      <p>Earth Pulse · 观测台</p>
+    </header>
+
+    <div id="panel" class="side-body"></div>
+
+    <div class="side-section">
+      <div id="stats"></div>
+    </div>
+
+    <div class="side-section">
+      <div id="ai"></div>
+    </div>
+
+    <footer class="side-foot">
+      <p>数据源：USGS 地震 · Open-Meteo 气象与空气质量 · wheretheiss.at</p>
+      <p>底图：Natural Earth（公有领域）· 投影与渲染为本项目手写，无第三方图形库</p>
+    </footer>
+  </aside>
+
+  <div id="timeline" class="timeline-host"></div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+MIT License
+
+Copyright (c) 2026 Xiwangsou
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+数据归属（非代码部分）：
+
+- Natural Earth 110m Land — 公有领域 (public domain)
+- USGS 地震目录 — 美国政府作品，公有领域
+- Open-Meteo 气象与空气质量数据 — CC BY 4.0
+  署名要求：https://open-meteo.com/en/licence
+- ISS 位置数据 — wheretheiss.at 公开接口
+
+本项目仅为上述公开数据的可视化呈现层，不对数据的准确性、
+完整性或及时性作任何担保。

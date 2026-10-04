@@ -106,6 +106,105 @@ check('比例尺：赤道 1 度≈111 km', () => {
   near(kmPerDeg, 111.19, 1.5, '赤道 1 度的公里数');
 });
 
+/**
+ * 逆变换往返一致性 —— 本项目最核心的数学正确性防线。
+ *
+ * 晨昏线靠逐像素逆变换绘制，一旦逆变换有误，
+ * 夜面分界线就会整体偏移，而且偏移得很"像那么回事"，肉眼极难发现。
+ * 这里用 project → unproject 的往返误差把它钉死。
+ */
+console.log('\n【投影逆变换往返一致性】');
+
+for (const view of [
+  { lat: 0, lon: 0, name: '赤道视点' },
+  { lat: 20, lon: 0, name: '北半球视点' },
+  { lat: 45, lon: 90, name: '斜视点' },
+  { lat: -30, lon: 200, name: '南半球视点' },
+  { lat: -60, lon: 30, name: '南高纬视点' },
+  { lat: 89, lon: 0, name: '近极点视点' },
+]) {
+  check(`${view.name} (${view.lat}, ${view.lon}) 往返误差 < 0.001°`, () => {
+    const p = new OrthographicProjection();
+    p.attach(1000, 800);
+    p.setView({ lat: view.lat, lon: view.lon, scale: 300 });
+    let worst = 0;
+    for (let lat = -85; lat <= 85; lat += 5) {
+      for (let lon = -180; lon < 180; lon += 5) {
+        const f = p.project(lat, lon);
+        // 判据必须与实现一致：可见性用 depth > 0.02 留出浮点余量。
+        // 边界附近 depth 在 0 附近抖动，若用 visible 判定会把
+        // 刚好可见的点纳入测试，而逆变换因严格判据返回 null，
+        // 造成"测试失败但实现无bug"的假阳性。
+        if (f.depth <= 0.02) continue;
+        const b = p.unproject(f.x, f.y);
+        assert(b, `(${lat},${lon}) depth=${f.depth.toFixed(4)} 应有逆变换结果`);
+        const eLat = Math.abs(b.lat - lat);
+        let eLon = Math.abs(b.lon - lon);
+        if (eLon > 180) eLon = 360 - eLon;
+        worst = Math.max(worst, eLat, eLon);
+      }
+    }
+    assert(worst < 0.001, `最大往返误差 ${worst}°，应 < 0.001°`);
+  });
+}
+
+check('逆变换在球面外返回 null', () => {
+  const p = new OrthographicProjection();
+  p.attach(1000, 800);
+  p.setView({ lat: 0, lon: 0, scale: 300 });
+  // 地球半径 300，球心 (500,400)。
+  // 这条防线至关重要：渲染器逐像素绘制晨昏线时，
+  // 完全靠它圈定「需要计算的像素范围」。一旦失效，
+  // 球外的夜空区域会被当作球面参与计算，夜面范围就会溢出到画面之外。
+  assert(p.unproject(500 + 400, 400) === null, '右侧 400px 处应返回 null');
+  assert(p.unproject(500 - 400, 400) === null, '左侧 400px 处应返回 null');
+  assert(p.unproject(500, 400 + 400) === null, '下方 400px 处应返回 null');
+  assert(p.unproject(500, 400 - 400) === null, '上方 400px 处应返回 null');
+  assert(p.unproject(0, 0) === null, '左上角应返回 null');
+  assert(p.unproject(999, 799) === null, '右下角应返回 null');
+
+  assert(p.unproject(500, 400) !== null, '中心点应有结果');
+  assert(p.unproject(500 + 299, 400) !== null, '球内近边缘点应有结果');
+  assert(p.unproject(500 + 200, 400) !== null, '球内点应有结果');
+});
+
+check('球外判定对所有视点与缩放都成立', () => {
+  for (const scale of [100, 300, 800]) {
+    for (const view of [[0, 0], [45, 90], [-60, 30]]) {
+      const p = new OrthographicProjection();
+      p.attach(1200, 900);
+      p.setView({ lat: view[0], lon: view[1], scale });
+      const cx = 600;
+      const cy = 450;
+      // 沿 8 个方向扫到球外
+      for (let a = 0; a < 8; a++) {
+        const ang = (a * Math.PI) / 4;
+        const far = scale * 1.3;
+        const px = cx + Math.cos(ang) * far;
+        const py = cy + Math.sin(ang) * far;
+        assert(
+          p.unproject(px, py) === null,
+          `视点(${view}) scale=${scale} 方向${a} 球外1.3R处应返回 null`
+        );
+      }
+    }
+  }
+});
+
+check('等距圆柱逆变换往返一致', () => {
+  const p = new EquirectangularProjection();
+  p.attach(720, 360);
+  p.setView({ lat: 10, lon: 30, scale: 300 });
+  for (const [lat, lon] of [[0, 0], [45, 90], [-45, -170], [80, 179], [-80, -179]]) {
+    const f = p.project(lat, lon);
+    const b = p.unproject(f.x, f.y);
+    near(b.lat, lat, 1e-9, `纬度 (${lat},${lon})`);
+    let dLon = Math.abs(b.lon - lon);
+    if (dLon > 180) dLon = 360 - dLon;
+    near(dLon, 0, 1e-9, `经度 (${lat},${lon})`);
+  }
+});
+
 check('视点移动后，原背面点转到正面变为可见', () => {
   // (0,0) 在视点(0,0)时是正面；转到 (0,170) 后它应落到背面
   ortho.setView({ lat: 0, lon: 0 });

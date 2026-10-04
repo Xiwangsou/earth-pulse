@@ -8,11 +8,14 @@
   "scripts": {
     "start": "node scripts/serve.mjs",
     "verify": "node scripts/verify.mjs",
+    "render": "node scripts/render-regress.mjs",
+    "derive": "node scripts/derive-inverse.mjs",
     "e2e": "node scripts/e2e-data.mjs",
     "e2e:ui": "node scripts/e2e-ui.mjs",
     "stress": "node scripts/stress.mjs",
-    "test": "node scripts/verify.mjs && node scripts/e2e-ui.mjs && node scripts/stress.mjs && node scripts/e2e-data.mjs",
-    "build:land": "node scripts/build-land.mjs"
+    "test": "node scripts/verify.mjs && node scripts/render-regress.mjs && node scripts/e2e-ui.mjs && node scripts/stress.mjs && node scripts/e2e-data.mjs",
+    "build:land": "node scripts/build-land.mjs",
+    "shot": "node scripts/shoot.mjs http://127.0.0.1:8848/ screenshot.png 1600 1000 8000"
   },
   "keywords": [
     "earthquake",

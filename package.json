@@ -1,0 +1,28 @@
+{
+  "name": "earth-pulse",
+  "version": "1.0.0",
+  "description": "地球脉冲 · 实时全球地震、空间站轨道与本地气象观测台。零密钥、零服务端，纯浏览器直连公开数据。",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "verify": "node scripts/verify.mjs",
+    "e2e": "node scripts/e2e-data.mjs",
+    "e2e:ui": "node scripts/e2e-ui.mjs",
+    "stress": "node scripts/stress.mjs",
+    "test": "node scripts/verify.mjs && node scripts/e2e-ui.mjs && node scripts/stress.mjs && node scripts/e2e-data.mjs",
+    "build:land": "node scripts/build-land.mjs"
+  },
+  "keywords": [
+    "earthquake",
+    "visualization",
+    "canvas",
+    "projection",
+    "open-data",
+    "no-dependency"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
